@@ -39,6 +39,35 @@ def hello_world():
 		data_t = df_t.drop(["datetime"], axis=1)
 
 		print(df)
-		return time.time()
+#		return time.time()
+
+		data = df.drop(["y","datetime"], axis=1)
+		target = df['y']
+
+		data_train_s, data_test_s, label_train_s, label_test_s = cross_validation.train_test_split(data, target, test_size=0.01)
+
+		parameters = {
+              'n_estimators' : [100],                 
+              'learning_rate' : [0.1, 0.05], 
+              'max_depth': [4, 6],
+              'min_samples_leaf': [3, 9],
+              'max_features': [1.0, 0.1]
+              }
+
+		clf_cv = grid_search.GridSearchCV(GradientBoostingRegressor(), parameters, cv = 4, scoring='neg_mean_absolute_error')
+
+		clf_cv.fit(data_train_s, label_train_s)
+
+		print("Best Model Parameter: ", clf_cv.best_params_)
+		print("Best Model Score: ", clf_cv.best_score_)
+
+		print("# PREDICT..")
+		pre = clf_cv.predict(data_test_s)
+
+#ac_score = metrics.accuracy_score(label_test_s, pre)
+		ac_score = metrics.mean_absolute_error(label_test_s, pre)
+		print("正解率=", ac_score)
+
+		return "Predict process completed!"
 
 run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
