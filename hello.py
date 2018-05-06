@@ -15,14 +15,7 @@ def hello_world():
 @route("/hello")
 def hello_world():
 #        return "hello")
-		df['day'] = df['datetime'].dt.strftime('%d')
 
-
-#テスト対象データ
-		df_t = pd.read_csv('data/test.csv',sep=',', parse_dates = [0])
-#df['datetime'] = df['datetime'].astype()
-
-		df_t['month'] = df_t['datetime'].dt.strf
 		start = time.time()
 
 #学習データ
@@ -30,7 +23,14 @@ def hello_world():
 #df['datetime'] = df['datetime'].astype()
 
 		df['month'] = df['datetime'].dt.strftime('%m')
-		df['weekday'] = df['datetime'].dt.strftime('%w'time('%m')
+		df['weekday'] = df['datetime'].dt.strftime('%w')
+		df['day'] = df['datetime'].dt.strftime('%d')
+
+#テスト対象データ
+		df_t = pd.read_csv('data/test.csv',sep=',', parse_dates = [0])
+#df['datetime'] = df['datetime'].astype()
+
+		df_t['month'] = df_t['datetime'].dt.strftime('%m')
 		df_t['weekday'] = df_t['datetime'].dt.strftime('%w')
 		df_t['day'] = df_t['datetime'].dt.strftime('%d')
 
