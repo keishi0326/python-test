@@ -17,7 +17,7 @@ def hello_world():
 #        return "hello"
 		start = time.time()
 
-#学習データ
+#蟄ｦ鄙偵ョ繝ｼ繧ｿ
 		df = pd.read_csv('data/new_train.csv',sep=',', parse_dates = [0])
 #df['datetime'] = df['datetime'].astype()
 
@@ -26,7 +26,7 @@ def hello_world():
 		df['day'] = df['datetime'].dt.strftime('%d')
 
 
-#テスト対象データ
+#繝�繧ｹ繝亥ｯｾ雎｡繝�繝ｼ繧ｿ
 		df_t = pd.read_csv('data/test.csv',sep=',', parse_dates = [0])
 #df['datetime'] = df['datetime'].astype()
 
