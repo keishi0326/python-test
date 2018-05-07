@@ -6,12 +6,21 @@ import pandas as pd
 from sklearn import svm, grid_search, cross_validation, metrics
 #from sklearn.ensemble         import RandomForestRegressor
 from sklearn.ensemble         import GradientBoostingRegressor
+import psycopg2 #DB Connect
 
  
 @route("/")
 def hello_world():
         return "Hello World!"
- 
+
+@route("/db")
+def hello_world():
+	DATABASE_URL = os.environ['DATABASE_URL']
+
+	conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+	
+	return "DB connect successfull!"
+
 @route("/hello")
 def hello_world():
 #        return "hello")
