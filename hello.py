@@ -19,8 +19,17 @@ def hello_world():
 
 	conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 	
-	return "DB connect successfull!"
+	print("DB connect successfull!")
 
+	cur = conn.cursor()
+	cur.execute("SELECT firstname, lastname, email FROM salesforce.contact")
+	 
+	for row in cur:
+		print(row[0], row[1], row[2])
+	
+	return "select statement executed!"
+		
+		
 @route("/hello")
 def hello_world():
 #        return "hello")
