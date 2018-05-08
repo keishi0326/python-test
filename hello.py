@@ -42,7 +42,7 @@ def hello_world():
 		cur = conn.cursor()
 	
 		sql = """ UPDATE salesforce.CampaignCandidate__c SET order__c = order__c + 1
-        	        WHERE foreignkey__c = ?"""
+        	        WHERE foreignkey__c = %s"""
 
 		key = ("00001_2")
 		
