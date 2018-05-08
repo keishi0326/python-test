@@ -28,8 +28,43 @@ def hello_world():
 		print(row[0], row[1], row[2])
 	
 	return "select statement executed!"
+
+@route("/dbupdate")
+def hello_world():
+
+	DATABASE_URL = os.environ['DATABASE_URL']
+	
+	try:
+		conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+	
+		print("DB connect successfull!")
+
+		cur = conn.cursor()
+	
+		key = "00001_2"
+
+		sql = """ UPDATE salesforce.CampaignCandidate__c SET order__c = order__c + 1
+        	        WHERE foreignkey__c = %s"""
+
+		#cur.execute("SELECT firstname, lastname, email FROM salesforce.contact")
+	 
+		cur.execute(sql, (key))
+	
+		conn.commit()
+		cur.close()
+	
+		resultMsg = "Update statement executed!"
 		
+	except (Exception, psycopg2.DatabaseError) as error:
+		resultMsg = "Database error occured."
 		
+	finally:
+        	if conn is not None:
+            		conn.close()
+
+	return resultMsg
+
+	
 @route("/hello")
 def hello_world():
 #        return "hello")
