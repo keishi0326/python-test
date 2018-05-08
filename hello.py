@@ -41,14 +41,14 @@ def hello_world():
 
 		cur = conn.cursor()
 	
-		key = "00001_2"
-
 		sql = """ UPDATE salesforce.CampaignCandidate__c SET order__c = order__c + 1
-        	        WHERE foreignkey__c = %s"""
+        	        WHERE foreignkey__c = ?"""
 
+		key = ("00001_2")
+		
 		#cur.execute("SELECT firstname, lastname, email FROM salesforce.contact")
 	 
-		cur.execute(sql, (key))
+		cur.execute(sql, key)
 	
 		conn.commit()
 		cur.close()
@@ -56,6 +56,7 @@ def hello_world():
 		resultMsg = "Update statement executed!"
 		
 	except (Exception, psycopg2.DatabaseError) as error:
+		print("Exception occured!!")
 		print(error)
 		resultMsg = "Database error occured."
 		
