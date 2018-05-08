@@ -44,7 +44,7 @@ def hello_world():
 		sql = """ UPDATE salesforce.CampaignCandidate__c SET order__c = order__c + 1
         	        WHERE foreignkey__c = %s"""
 
-		key = ("00001_2")
+		key = ("00001_2",)
 		
 		#cur.execute("SELECT firstname, lastname, email FROM salesforce.contact")
 	 
