@@ -56,6 +56,7 @@ def hello_world():
 		resultMsg = "Update statement executed!"
 		
 	except (Exception, psycopg2.DatabaseError) as error:
+		print(error)
 		resultMsg = "Database error occured."
 		
 	finally:
