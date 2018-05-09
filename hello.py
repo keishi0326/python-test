@@ -16,11 +16,11 @@ def hello_world():
 @route("/observation-result", method='GET')
 def hello_world():
 	notCrowded = request.query.get('notCrowded')
-    	storeID = request.query.get('storeID')
+	storeID = request.query.get('storeID')
 
-	#GETで何も渡されていない時は何も入れない
-    	notCrowded = "empty!!" if notCrowded is None else notCrowded
-    	storeID = "empty!!" if storeID is None else storeID	
+	#if input parameter is nothing, 'empty' literal set
+	notCrowded = "empty!!" if notCrowded is None else notCrowded
+	storeID = "empty!!" if storeID is None else storeID	
 	
 	#return "Hello World!!!!!!!!!!!!"
 	return '''notCrowded param : {notCrowded},  storeID param : {storeID}'''.format(notCrowded=notCrowded, storeID=storeID) 
