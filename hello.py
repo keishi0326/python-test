@@ -13,6 +13,10 @@ import psycopg2 #DB Connect
 def hello_world():
         return "Hello World!"
 
+@route("/request")
+def hello_world():
+	return "Hello World!!!!!!!!!!!!"
+
 @route("/db")
 def hello_world():
 	DATABASE_URL = os.environ['DATABASE_URL']
