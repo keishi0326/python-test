@@ -13,9 +13,19 @@ import psycopg2 #DB Connect
 def hello_world():
         return "Hello World!"
 
-@route("/request")
+@route("/observation-result", method='GET')
 def hello_world():
-	return "Hello World!!!!!!!!!!!!"
+	notCrowded = request.query.get('notCrowded')
+    	storeID = request.query.get('storeID')
+
+	#GETで何も渡されていない時は何も入れない
+    	notCrowded = "empty!!" if notCrowded is None else notCrowded
+    	storeID = "empty!!" if storeID is None else storeID	
+	
+	#return "Hello World!!!!!!!!!!!!"
+	return '''notCrowded param : {notCrowded},  storeID param : {storeID}'''.format(notCrowded=notCrowded, storeID=storeID) 
+
+
 
 @route("/db")
 def hello_world():
