@@ -19,7 +19,7 @@ def hello_world():
 	storeID = request.query.get('storeID')
 
 	#if input parameter is nothing, 'empty' literal set
-	notCrowded = "null!!" if notCrowded is None else notCrowded
+	empty = "null!!" if empty is None else empty
 	storeID = "null!!" if storeID is None else storeID	
 	
 	#return "Hello World!!!!!!!!!!!!"
