@@ -22,9 +22,47 @@ def hello_world():
 	empty = "null!!" if empty is None else empty
 	storeID = "null!!" if storeID is None else storeID	
 	
-	#return "Hello World!!!!!!!!!!!!"
 	return '''empty param : {empty},  storeID param : {storeID}'''.format(empty=empty, storeID=storeID) 
 
+@route("/observation-result2", method='GET')
+def hello_world():
+	empty = request.query.get('empty')
+	storeID = request.query.get('storeID')
+
+	#if input parameter is nothing, 'empty' literal set
+	empty = "null!!" if empty is None else empty
+	storeID = "null!!" if storeID is None else storeID	
+	
+	debug_msg = '''empty param : {empty},  storeID param : {storeID}'''.format(empty=empty, storeID=storeID) 
+	print(debug_msg)
+
+	conn, cur = db_connect()
+	
+	##emptyが閾値を超えているかどうかをチェック
+	#パラメタで渡された店舗コードをキーに店舗マスタを検索
+
+	#観測情報(H)へのレコード登録処理
+	try:	
+		cur.execute("SELECT ObservationID__c FROM salesforce.ObservationH__c order by ObservationID__c desc")
+	 
+	#最大のIDを取得
+		for row in cur:
+			maxID = row[0]
+			print("maxID:{0}".format(maxID))
+
+#		sql = """ INSERT INTO salesforce.ObservationH__c(ObservationID__c, ObservationTime__c, Availability__c, StoreSFID__c) VALUES (%s, %s, %s, %s)"""
+#		key = ("OH0000001", "2018-05-12 21:26:34", "0.75", "a037F00000RqujbQAB")
+#		cur.execute(sql, key)
+		conn.commit()
+
+	#マスタ登録値を取得してパラメタ(empty)がその値を超えていれば
+
+	#処理を継続。超えていなければ処理終了
+
+	#観測情報と店舗マスタ、天候情報、施策マスタを結合した状態でレコード取得
+	
+#	select * from salesforce.ObservationH__c ob inner join salesforce.Store__c  store on 
+#	ob.StoreSFID__c = store.id
 
 
 @route("/db")
@@ -49,20 +87,10 @@ def hello_world():
 def hello_world():
 
 	id = request.query.get('key')
-
 	id = id if id is not None else "CK-00000010"
 	
-#	DATABASE_URL = os.environ['DATABASE_URL']
-	
 	conn, cur = db_connect()	
-
 	try:
-#		conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-	
-#		print("DB connect successfull!")
-
-#		cur = conn.cursor()
-	
 		sql = """ INSERT INTO salesforce.CampaignCandidate__c(CampaignCandidateID__c, cm1_sfid__c, cm2_sfid__c, cm3_sfid__c, cm4_sfid__c, cm5_sfid__c, storesfid__c) VALUES (%s, %s, %s, %s, %s, %s, %s)"""
 
 		key = ("CK-00000014", "a027F00000JWCIwQAP", "a027F00000JWCJQQA5", "a027F00000JWCJVQA5", "a027F00000JWCJaQAP", "a027F00000JWCJfQAP", "a037F00000RqujbQAB")
@@ -90,15 +118,9 @@ def hello_world():
 
 	id = id if id is not None else "00000001"
 	
-	DATABASE_URL = os.environ['DATABASE_URL']
+	conn, cur = db_connect()	
 	
 	try:
-		conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-	
-		print("DB connect successfull!")
-
-		cur = conn.cursor()
-	
 		sql = """ INSERT INTO salesforce.ObservationH__c(ObservationID__c, ObservationTime__c, Availability__c, StoreSFID__c) VALUES (%s, %s, %s, %s)"""
 
 		key = ("OH0000001", "2018-05-12 21:26:34", "0.75", "a037F00000RqujbQAB")
@@ -119,27 +141,13 @@ def hello_world():
             		conn.close()
 	return resultMsg
 
-
-
 @route("/dbupdate")
 def hello_world():
-
-	DATABASE_URL = os.environ['DATABASE_URL']
-	
+	conn, cur = db_connect()	
 	try:
-		conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-	
-		print("DB connect successfull!")
-
-		cur = conn.cursor()
-	
-		sql = """ UPDATE salesforce.CampaignCandidate__c SET order__c = order__c + 1
-        	        WHERE foreignkey__c = %s"""
-
+		sql = """ UPDATE salesforce.CampaignCandidate__c SET order__c = order__c + 1 WHERE foreignkey__c = %s"""
 		key = ("00001_2",)
-		
-		#cur.execute("SELECT firstname, lastname, email FROM salesforce.contact")
-	 
+		 
 		cur.execute(sql, key)
 	
 		conn.commit()
@@ -150,14 +158,11 @@ def hello_world():
 	except (Exception, psycopg2.DatabaseError) as error:
 		print("Exception occured!!")
 		print(error)
-		resultMsg = "Database error occured."
-		
+		resultMsg = "Database error occured."		
 	finally:
         	if conn is not None:
             		conn.close()
-
 	return resultMsg
-
 	
 @route("/hello")
 def hello_world():
