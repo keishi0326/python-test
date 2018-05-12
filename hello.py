@@ -59,7 +59,7 @@ def hello_world():
 
 		cur = conn.cursor()
 	
-		sql = """ INSERT INTO salesforce.CampaignCandidate__c(CampaignCandidateID__c, cm1_sfid__c, cm2_sfid__c, cm3_sfid__c, cm4_sfid__c, cm5_sfid__c) VALUES (%s, %s, %s, %s, %s)"""
+		sql = """ INSERT INTO salesforce.CampaignCandidate__c(CampaignCandidateID__c, cm1_sfid__c, cm2_sfid__c, cm3_sfid__c, cm4_sfid__c, cm5_sfid__c) VALUES (%s, %s, %s, %s, %s, %s)"""
 
 		key = ("CK-00000011", "1", "2", "3", "4", "5")
 
