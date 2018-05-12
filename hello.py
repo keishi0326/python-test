@@ -217,6 +217,7 @@ def hello_world():
 
 		return "Predict process completed!"
 
+# DB接続、カーソル取得処理
 def db_connect():
 		DATABASE_URL = os.environ['DATABASE_URL']
 		try:
@@ -226,9 +227,6 @@ def db_connect():
 			print("Exception occured!!")
 			print(error)
 			raise Exception("Database error occured.")
-		finally:
-        		if conn is not None:
-            			conn.close()		
 
 		print("DB connect successfull!")
 		return conn, cur
