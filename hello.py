@@ -36,6 +36,8 @@ def hello_world():
 	print("DB connect successfull!")
 
 	cur = conn.cursor()
+	
+	
 	cur.execute("SELECT firstname, lastname, email FROM salesforce.contact")
 	 
 	for row in cur:
@@ -50,18 +52,20 @@ def hello_world():
 
 	id = id if id is not None else "CK-00000010"
 	
-	DATABASE_URL = os.environ['DATABASE_URL']
+#	DATABASE_URL = os.environ['DATABASE_URL']
 	
-	try:
-		conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-	
-		print("DB connect successfull!")
+	conn, cur = db_connect()	
 
-		cur = conn.cursor()
+	try:
+#		conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+	
+#		print("DB connect successfull!")
+
+#		cur = conn.cursor()
 	
 		sql = """ INSERT INTO salesforce.CampaignCandidate__c(CampaignCandidateID__c, cm1_sfid__c, cm2_sfid__c, cm3_sfid__c, cm4_sfid__c, cm5_sfid__c, storesfid__c) VALUES (%s, %s, %s, %s, %s, %s, %s)"""
 
-		key = ("CK-00000013", "a027F00000JWCIwQAP", "a027F00000JWCJQQA5", "a027F00000JWCJVQA5", "a027F00000JWCJaQAP", "a027F00000JWCJfQAP", "a037F00000RqujbQAB")
+		key = ("CK-00000014", "a027F00000JWCIwQAP", "a027F00000JWCJQQA5", "a027F00000JWCJVQA5", "a027F00000JWCJaQAP", "a027F00000JWCJfQAP", "a037F00000RqujbQAB")
 
 		cur.execute(sql, key)
 		conn.commit()
@@ -72,7 +76,7 @@ def hello_world():
 	except (Exception, psycopg2.DatabaseError) as error:
 		print("Exception occured!!")
 		print(error)
-		resultMsg = "Database error occured."
+		resultMsg = "Insert error occured."
 		
 	finally:
         	if conn is not None:
@@ -213,4 +217,20 @@ def hello_world():
 
 		return "Predict process completed!"
 
+def db_connect():
+		DATABASE_URL = os.environ['DATABASE_URL']
+		try:
+			conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+			cur = conn.cursor()
+		except (Exception, psycopg2.DatabaseError) as error:
+			print("Exception occured!!")
+			print(error)
+			raise Exception("Database error occured.")
+		finally:
+        		if conn is not None:
+            			conn.close()		
+
+		print("DB connect successfull!")
+		return conn, cur
+	
 run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
