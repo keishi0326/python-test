@@ -43,6 +43,38 @@ def hello_world():
 	
 	return "select statement executed!"
 
+@route("/dbinsert")
+def hello_world():
+
+	DATABASE_URL = os.environ['DATABASE_URL']
+	
+	try:
+		conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+	
+		print("DB connect successfull!")
+
+		cur = conn.cursor()
+	
+		sql = """ INSERT INTO salesforce.CampaignCandidate__c(CampaignCandidateID__c) VALUES (%s)"""
+
+		key = ("CK-00000010",)
+
+		cur.execute(sql, key)
+		conn.commit()
+		cur.close()
+	
+		resultMsg = "Insert statement executed!"
+		
+	except (Exception, psycopg2.DatabaseError) as error:
+		print("Exception occured!!")
+		print(error)
+		resultMsg = "Database error occured."
+		
+	finally:
+        	if conn is not None:
+            		conn.close()
+	return resultMsg
+
 @route("/dbupdate")
 def hello_world():
 
