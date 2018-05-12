@@ -79,6 +79,44 @@ def hello_world():
             		conn.close()
 	return resultMsg
 
+@route("/observationinsert", method="GET")
+def hello_world():
+
+	id = request.query.get('key')
+
+	id = id if id is not None else "00000001"
+	
+	DATABASE_URL = os.environ['DATABASE_URL']
+	
+	try:
+		conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+	
+		print("DB connect successfull!")
+
+		cur = conn.cursor()
+	
+		sql = """ INSERT INTO salesforce.ObservationH__c(ObservationID__c, ObservationTime__c, Availability__c, StoreSFID__c) VALUES (%s, %s, %s, %s, %s, %s, %s)"""
+
+		key = ("CK-00000013", "a027F00000JWCIwQAP", "a027F00000JWCJQQA5", "a027F00000JWCJVQA5", "a027F00000JWCJaQAP", "a027F00000JWCJfQAP", "a037F00000RqujbQAB")
+
+		cur.execute(sql, key)
+		conn.commit()
+		cur.close()
+	
+		resultMsg = "Insert statement executed!"
+		
+	except (Exception, psycopg2.DatabaseError) as error:
+		print("Exception occured!!")
+		print(error)
+		resultMsg = "Database error occured."
+		
+	finally:
+        	if conn is not None:
+            		conn.close()
+	return resultMsg
+
+
+
 @route("/dbupdate")
 def hello_world():
 
