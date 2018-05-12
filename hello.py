@@ -61,7 +61,7 @@ def hello_world():
 	
 		sql = """ INSERT INTO salesforce.CampaignCandidate__c(CampaignCandidateID__c, cm1_sfid__c, cm2_sfid__c, cm3_sfid__c, cm4_sfid__c, cm5_sfid__c) VALUES (%s, %s, %s, %s, %s, %s)"""
 
-		key = ("CK-00000011", "1", "2", "3", "4", "5")
+		key = ("CK-00000012", "a027F00000JWCIwQAP", "a027F00000JWCJQQA5", "a027F00000JWCJVQA5", "a027F00000JWCJaQAP", "a027F00000JWCJfQAP")
 
 		cur.execute(sql, key)
 		conn.commit()
