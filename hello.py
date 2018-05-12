@@ -55,12 +55,10 @@ def hello_world():
 #		cur.execute(sql, key)
 		conn.commit()
 
-	#マスタ登録値を取得してパラメタ(empty)がその値を超えていれば
+#マスタ登録値を取得してパラメタ(empty)がその値を超えていれば
 
-	#処理を継続。超えていなければ処理終了
-
-	#観測情報と店舗マスタ、天候情報、施策マスタを結合した状態でレコード取得
-	
+#処理を継続。超えていなければ処理終了
+#観測情報と店舗マスタ、天候情報、施策マスタを結合した状態でレコード取得
 #	select * from salesforce.ObservationH__c ob inner join salesforce.Store__c  store on 
 #	ob.StoreSFID__c = store.id
 
@@ -72,9 +70,7 @@ def hello_world():
 	conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 	
 	print("DB connect successfull!")
-
 	cur = conn.cursor()
-	
 	
 	cur.execute("SELECT firstname, lastname, email FROM salesforce.contact")
 	 
