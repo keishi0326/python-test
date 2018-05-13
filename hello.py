@@ -62,8 +62,21 @@ def hello_world():
 		sql = """ INSERT INTO salesforce.ObservationH__c(ObservationID__c, ObservationTime__c, Availability__c, StoreSFID__c) VALUES (%s, %s, %s, %s)"""
 		key = (newID, now, empty, storeID)
 		cur.execute(sql, key)
-
 		conn.commit()
+
+#マスタ登録値を取得してパラメタ(empty)がその値を超えていれば
+#処理を継続。超えていなければ処理終了
+		sql_store = "select congestionjudgevalue__c from salesforce.Store__c where sfid = %s"""
+		key_store = (storeID,)
+		cur.execute(sql_store, key_store)
+
+		row = cur.fetchone()
+		judge_value = row[0]
+		
+		if int(empty) < judge_value:
+			return "observation circumstance is crowded!"
+		
+		
 	except (Exception, psycopg2.DatabaseError) as error:
 		print("Exception occured!!")
 		print(error)
