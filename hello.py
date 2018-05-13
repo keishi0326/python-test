@@ -22,7 +22,7 @@ def hello_world():
 	empty = "null!!" if empty is None else empty
 	storeID = "null!!" if storeID is None else storeID	
 	
-	return '''empty param : {empty},  storeID param : {storeID}'''.format(empty=empty, storeID=storeID) 
+	return '''empty param : {empty},  storeID param : {storeID}'''.format(empty=empty, storeID=storeID)
 
 @route("/observation-result2", method='GET')
 def hello_world():
@@ -62,6 +62,7 @@ def hello_world():
 #	select * from salesforce.ObservationH__c ob inner join salesforce.Store__c  store on 
 #	ob.StoreSFID__c = store.id
 
+	return "process succeeded!"
 
 @route("/db")
 def hello_world():
