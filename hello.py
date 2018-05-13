@@ -100,7 +100,8 @@ def hello_world():
 		" where ob.ObservationID__c = %s"
 		key_target2 = (newID, )
 
-		df = psql.read_sql(sql_target2, conn, params=key_target2, parse_dates = [1])
+#		df = psql.read_sql(sql_target2, conn, params=key_target2, parse_dates = [1])
+		df = psql.read_sql(sql_target2, conn, params=key_target2)
 		
 		print(df.loc[0].Datetime)
 			
@@ -279,7 +280,7 @@ def predict(df):
 
 #	le_dow = LabelEncoder().fit(["日", "月", "火", "水", "木", "金", "土"])
 #	le_seg = LabelEncoder().fit(["ビジネス", "住宅", "学校", "観光"])
-#	le_weather = LabelEncoder().fit(["晴れ", "曇り", "雨"])
+	le_weather = LabelEncoder().fit(["晴れ", "曇り", "雨"])
 
 #	df['DayOfTheWeek'] = le_dow.transform(df['DayOfTheWeek'])
 #	df['Segment'] = le_seg.transform(df['Segment'])
