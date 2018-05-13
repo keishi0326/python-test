@@ -277,13 +277,13 @@ def predict(df):
 
 	df['Time'] = df['Datetime'].dt.strftime('%H')
 
-	le_dow = LabelEncoder().fit(["日", "月", "火", "水", "木", "金", "土"])
-	le_seg = LabelEncoder().fit(["ビジネス", "住宅", "学校", "観光"])
-	le_weather = LabelEncoder().fit(["晴れ", "曇り", "雨"])
+#	le_dow = LabelEncoder().fit(["日", "月", "火", "水", "木", "金", "土"])
+#	le_seg = LabelEncoder().fit(["ビジネス", "住宅", "学校", "観光"])
+#	le_weather = LabelEncoder().fit(["晴れ", "曇り", "雨"])
 
-	df['DayOfTheWeek'] = le_dow.transform(df['DayOfTheWeek'])
-	df['Segment'] = le_seg.transform(df['Segment'])
-	df['Weather'] = le_weather.transform(df['Weather'])
+#	df['DayOfTheWeek'] = le_dow.transform(df['DayOfTheWeek'])
+#	df['Segment'] = le_seg.transform(df['Segment'])
+#	df['Weather'] = le_weather.transform(df['Weather'])
 
 	data = df.drop(["Datetime"], axis=1)
 	
