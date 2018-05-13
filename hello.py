@@ -9,6 +9,8 @@ from sklearn import svm, grid_search, cross_validation, metrics
 from sklearn.ensemble         import GradientBoostingRegressor
 import psycopg2 #DB Connect
 
+from sklearn.externals import joblib
+from sklearn.preprocessing import LabelEncoder
 
 @route("/")
 def hello_world():
@@ -91,16 +93,16 @@ def hello_world():
 		for row in cur:
 			print(row)
 
-		sql_target2 = "select ob.observationtime__c as datetime, cam.campaignid__c, weather.weather__c from salesforce.ObservationH__c ob inner join salesforce.Store__c  store on " \
+		sql_target2 = "select store.Zip__c as Zip, ob.observationtime__c as Datetime, cam.campaignid__c as Campaign_id, weather.weather__c as Weather from salesforce.ObservationH__c ob inner join salesforce.Store__c  store on " \
 		"ob.StoreSFID__c = store.sfid " \
 		"  left join salesforce.WeatherInfo__c weather on store.Zip__c = weather.Zip__c " \
 		"  inner join  salesforce.CampaignMaster__c cam on true = true " \
 		" where ob.ObservationID__c = %s"
 		key_target2 = (newID, )
 
-		df = psql.read_sql(sql_target2, conn, params=key_target2)
+		df = psql.read_sql(sql_target2, conn, params=key_target2, parse_dates = [1])
 		
-		print(df.loc[0].datetime)
+		print(df.loc[0].Datetime)
 			
 	except (Exception, psycopg2.DatabaseError) as error:
 		print("Exception occured!!")
@@ -267,6 +269,25 @@ def hello_world():
 
 		return "Predict process completed!"
 
+# リコメンデーション処理
+def predict(df):
+	df['Month'] = df['Datetime'].dt.strftime('%m')
+	df['Weekday'] = df['Datetime'].dt.strftime('%w')
+	df['Day'] = df['Datetime'].dt.strftime('%d')
+
+	df['Time'] = df['Datetime'].dt.strftime('%H')
+
+	le_dow = LabelEncoder().fit(["日", "月", "火", "水", "木", "金", "土"])
+	le_seg = LabelEncoder().fit(["ビジネス", "住宅", "学校", "観光"])
+	le_weather = LabelEncoder().fit(["晴れ", "曇り", "雨"])
+
+	df['DayOfTheWeek'] = le_dow.transform(df['DayOfTheWeek'])
+	df['Segment'] = le_seg.transform(df['Segment'])
+	df['Weather'] = le_weather.transform(df['Weather'])
+
+	data = df.drop(["Datetime"], axis=1)
+	
+	
 # DB接続、カーソル取得処理
 def db_connect():
 		DATABASE_URL = os.environ['DATABASE_URL']
