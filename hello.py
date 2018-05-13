@@ -8,7 +8,7 @@ from sklearn import svm, grid_search, cross_validation, metrics
 from sklearn.ensemble         import GradientBoostingRegressor
 import psycopg2 #DB Connect
 
- 
+
 @route("/")
 def hello_world():
         return "Hello World!"
@@ -31,18 +31,18 @@ def hello_world():
 
 	#if input parameter is nothing, 'empty' literal set
 	empty = "null!!" if empty is None else empty
-	storeID = "null!!" if storeID is None else storeID	
+	storeID = "null!!" if storeID is None else storeID
 	
-	debug_msg = '''empty param : {empty},  storeID param : {storeID}'''.format(empty=empty, storeID=storeID) 
+	debug_msg = '''empty param : {empty},  storeID param : {storeID}'''.format(empty=empty, storeID=storeID)
 	print(debug_msg)
 
 	conn, cur = db_connect()
 	
-	##emptyが閾値を超えているかどうかをチェック
+	#emptyが閾値を超えているかどうかをチェック
 	#パラメタで渡された店舗コードをキーに店舗マスタを検索
 
 	#観測情報(H)へのレコード登録処理
-	try:	
+	try:
 		cur.execute("SELECT ObservationID__c FROM salesforce.ObservationH__c order by ObservationID__c desc")
 	 
 	#最大のIDを取得
