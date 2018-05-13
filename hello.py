@@ -46,7 +46,7 @@ def hello_world():
 			print("maxID:{0}".format(maxID))
 			
 			#extract number part
-			substr = mxID[2:]
+			substr = maxID[2:]
 			#number increment and concatenate prefix"OH"
 			newID = "OH{:07}".format(int(substr) + 1)
 		
