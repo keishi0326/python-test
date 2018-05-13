@@ -37,15 +37,10 @@ def hello_world():
 	print(debug_msg)
 
 	conn, cur = db_connect()
-	
-	#emptyが閾値を超えているかどうかをチェック
-	#パラメタで渡された店舗コードをキーに店舗マスタを検索
 
-	#観測情報(H)へのレコード登録処理
 	try:
 		cur.execute("SELECT ObservationID__c FROM salesforce.ObservationH__c order by ObservationID__c desc")
-	 
-	#最大のIDを取得
+
 		for row in cur:
 			maxID = row[0]
 			print("maxID:{0}".format(maxID))
@@ -54,13 +49,6 @@ def hello_world():
 #		key = ("OH0000001", "2018-05-12 21:26:34", "0.75", "a037F00000RqujbQAB")
 #		cur.execute(sql, key)
 		conn.commit()
-
-#マスタ登録値を取得してパラメタ(empty)がその値を超えていれば
-
-#処理を継続。超えていなければ処理終了
-#観測情報と店舗マスタ、天候情報、施策マスタを結合した状態でレコード取得
-#	select * from salesforce.ObservationH__c ob inner join salesforce.Store__c  store on 
-#	ob.StoreSFID__c = store.id
 
 	return "process succeeded!"
 
