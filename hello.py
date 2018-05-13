@@ -43,12 +43,13 @@ def hello_world():
 
 		for row in cur:
 			maxID = row[0]
-			print("maxID:{0}".format(maxID))
+			print("Current maxID:{0}".format(maxID))
+			break
 			
-			#extract number part
-			substr = maxID[2:]
-			#number increment and concatenate prefix"OH"
-			newID = "OH{:07}".format(int(substr) + 1)
+		#extract number part
+		substr = maxID[2:]
+		#number increment and concatenate prefix"OH"
+		newID = "OH{:07}".format(int(substr) + 1)
 		
 		newID = "OH0000001" if newID is None else newID
 		
