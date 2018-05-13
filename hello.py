@@ -103,7 +103,7 @@ def hello_world():
 #		df = psql.read_sql(sql_target2, conn, params=key_target2, parse_dates = [1])
 		df = psql.read_sql(sql_target2, conn, params=key_target2)
 		
-		print(df.loc[0].Datetime)
+		print(df.loc[0])
 			
 	except (Exception, psycopg2.DatabaseError) as error:
 		print("Exception occured!!")
