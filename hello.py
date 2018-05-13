@@ -29,9 +29,9 @@ def hello_world():
 	empty = request.query.get('empty')
 	storeID = request.query.get('storeID')
 
-	#if input parameter is nothing, 'empty' literal set
-	empty = "null!!" if empty is None else empty
-	storeID = "null!!" if storeID is None else storeID
+	#if input parameter is nothing, fix literal set
+	empty = "0.75" if empty is None else empty
+	storeID = "a037F00000RqujbQAB" if storeID is None else storeID
 	
 	debug_msg = '''empty param : {empty},  storeID param : {storeID}'''.format(empty=empty, storeID=storeID)
 	print(debug_msg)
@@ -44,10 +44,23 @@ def hello_world():
 		for row in cur:
 			maxID = row[0]
 			print("maxID:{0}".format(maxID))
+			
+			#extract number part
+			substr = mxID[2:]
+			#number increment and concatenate prefix"OH"
+			newID = "OH{:07}".format(int(substr) + 1)
+		
+		newID = "OH0000001" if newID is None else newID
+		
+		now = datetime.now()
 
 #		sql = """ INSERT INTO salesforce.ObservationH__c(ObservationID__c, ObservationTime__c, Availability__c, StoreSFID__c) VALUES (%s, %s, %s, %s)"""
 #		key = ("OH0000001", "2018-05-12 21:26:34", "0.75", "a037F00000RqujbQAB")
 #		cur.execute(sql, key)
+
+		sql = """ INSERT INTO salesforce.ObservationH__c(ObservationID__c, ObservationTime__c, Availability__c, StoreSFID__c) VALUES (%s, %s, %s, %s)"""
+		key = (newID, now, empty, storeID)
+		cur.execute(sql, key)
 
 		conn.commit()
 	except (Exception, psycopg2.DatabaseError) as error:
