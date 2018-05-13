@@ -52,7 +52,7 @@ def hello_world():
 		
 		newID = "OH0000001" if newID is None else newID
 		
-		now = datetime.now()
+		now = datetime.datetime.now()
 
 #		sql = """ INSERT INTO salesforce.ObservationH__c(ObservationID__c, ObservationTime__c, Availability__c, StoreSFID__c) VALUES (%s, %s, %s, %s)"""
 #		key = ("OH0000001", "2018-05-12 21:26:34", "0.75", "a037F00000RqujbQAB")
