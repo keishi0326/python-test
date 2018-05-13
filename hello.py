@@ -104,7 +104,10 @@ def hello_world():
 		df = psql.read_sql(sql_target2, conn, params=key_target2)
 		
 		print(df.loc[0])
-			
+		
+		# 暫定処理
+		insert_campaign()
+		
 	except (Exception, psycopg2.DatabaseError) as error:
 		print("Exception occured!!")
 		print(error)
@@ -287,6 +290,32 @@ def predict(df):
 #	df['Weather'] = le_weather.transform(df['Weather'])
 
 	data = df.drop(["Datetime"], axis=1)
+
+#  キャンペーン候補追加
+def insert_campain():
+	cur.execute("SELECT campaigncandidateid__c FROM salesforce.CampaignCandidate__c order by campaigncandidateid__c desc")
+
+	for row in cur:
+		maxID = row[0]
+		print("Current maxID:{0}".format(maxID))
+		break
+			
+	#extract number part
+	substr = maxID[3:]
+	#number increment and concatenate prefix"OH"
+	newID = "CK-{:08}".format(int(substr) + 1)
+	
+	newID = "CK-00000001" if newID is None else newID
+
+	sql = """ INSERT INTO salesforce.CampaignCandidate__c(CampaignCandidateID__c, cm1_sfid__c, cm2_sfid__c, cm3_sfid__c, cm4_sfid__c, cm5_sfid__c, storesfid__c) VALUES (%s, %s, %s, %s, %s, %s, %s)"""
+
+	key = (newID, "a027F00000JWCIwQAP", "a027F00000JWCJQQA5", "a027F00000JWCJVQA5", "a027F00000JWCJaQAP", "a027F00000JWCJfQAP", "a037F00000RqujbQAB")
+
+	cur.execute(sql, key)
+	conn.commit()
+	cur.close()
+	
+	print = "Insert campaign candicate statement executed!"
 	
 	
 # DB接続、カーソル取得処理
