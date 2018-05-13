@@ -30,7 +30,7 @@ def hello_world():
 	storeID = request.query.get('storeID')
 
 	#if input parameter is nothing, fix literal set
-	empty = "0.75" if empty is None else empty
+	empty = "75" if empty is None else empty
 	storeID = "a037F00000RqujbQAB" if storeID is None else storeID
 	
 	debug_msg = '''empty param : {empty},  storeID param : {storeID}'''.format(empty=empty, storeID=storeID)
@@ -64,7 +64,7 @@ def hello_world():
 		cur.execute(sql, key)
 		conn.commit()
 
-#マスタ登録値を取得してパラメタ(empty)がその値を超えていれば
+#店舗マスタ登録値を取得してパラメタ(empty)がその値を超えていれば
 #処理を継続。超えていなければ処理終了
 		sql_store = "select congestionjudgevalue__c from salesforce.Store__c where sfid = %s"""
 		key_store = (storeID,)
@@ -74,8 +74,21 @@ def hello_world():
 		judge_value = row[0]
 		
 		if int(empty) < judge_value:
-			return "observation circumstance is crowded!"
+			return "The observed situation is crowded!"
+	
+		print("Recommendation process starts!!")
 		
+		sql_target = "select * from salesforce.ObservationH__c ob inner join salesforce.Store__c  store on " \
+		"ob.StoreSFID__c = store.sfid " \
+		"  left join salesforce.WeatherInfo__c weather on store.Zip__c = weather.Zip__c " \
+		"  inner join  salesforce.CampaignMaster__c on true = true " \
+		" where ob.ObservationID__c = %s"
+		
+		key_target = (newID, )
+		cur.execute(sql_target, key_target)
+		
+		for row in cur:
+			print(row)
 		
 	except (Exception, psycopg2.DatabaseError) as error:
 		print("Exception occured!!")
