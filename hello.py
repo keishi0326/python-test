@@ -315,7 +315,7 @@ def insert_campaign(conn, cur):
 	conn.commit()
 	cur.close()
 	
-	print = "Insert campaign candicate statement executed!"
+	print ("Insert campaign candicate statement executed!")
 	
 	
 # DB接続、カーソル取得処理
