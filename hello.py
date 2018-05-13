@@ -48,7 +48,15 @@ def hello_world():
 #		sql = """ INSERT INTO salesforce.ObservationH__c(ObservationID__c, ObservationTime__c, Availability__c, StoreSFID__c) VALUES (%s, %s, %s, %s)"""
 #		key = ("OH0000001", "2018-05-12 21:26:34", "0.75", "a037F00000RqujbQAB")
 #		cur.execute(sql, key)
+
 		conn.commit()
+	except (Exception, psycopg2.DatabaseError) as error:
+		print("Exception occured!!")
+		print(error)
+		resultMsg = "DB error occured."		
+	finally:
+        	if conn is not None:
+            		conn.close()
 
 	return "process succeeded!"
 
