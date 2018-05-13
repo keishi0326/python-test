@@ -106,7 +106,7 @@ def hello_world():
 		print(df.loc[0])
 		
 		# 暫定処理
-		insert_campaign()
+		insert_campaign(conn, cur)
 		
 	except (Exception, psycopg2.DatabaseError) as error:
 		print("Exception occured!!")
@@ -292,7 +292,7 @@ def predict(df):
 	data = df.drop(["Datetime"], axis=1)
 
 #  キャンペーン候補追加
-def insert_campaign():
+def insert_campaign(conn, cur):
 	cur.execute("SELECT campaigncandidateid__c FROM salesforce.CampaignCandidate__c order by campaigncandidateid__c desc")
 
 	for row in cur:
