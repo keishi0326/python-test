@@ -91,7 +91,7 @@ def hello_world():
 		for row in cur:
 			print(row)
 
-		sql_target2 = "select ob.observationtime__c as datetime, cam.campaignid__c, cam.weather__c from salesforce.ObservationH__c ob inner join salesforce.Store__c  store on " \
+		sql_target2 = "select ob.observationtime__c as datetime, cam.campaignid__c, weather.weather__c from salesforce.ObservationH__c ob inner join salesforce.Store__c  store on " \
 		"ob.StoreSFID__c = store.sfid " \
 		"  left join salesforce.WeatherInfo__c weather on store.Zip__c = weather.Zip__c " \
 		"  inner join  salesforce.CampaignMaster__c cam on true = true " \
