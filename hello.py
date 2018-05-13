@@ -292,7 +292,7 @@ def predict(df):
 	data = df.drop(["Datetime"], axis=1)
 
 #  キャンペーン候補追加
-def insert_campain():
+def insert_campaign():
 	cur.execute("SELECT campaigncandidateid__c FROM salesforce.CampaignCandidate__c order by campaigncandidateid__c desc")
 
 	for row in cur:
