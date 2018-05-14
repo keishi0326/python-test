@@ -95,7 +95,7 @@ def hello_world():
 		for row in cur:
 			print(row)
 
-		sql_target2 = "select store.Zip__c as Zip, ob.observationtime__c as Datetime, cam.campaignid__c as Campaign_id, weather.weather__c as Weather from salesforce.ObservationH__c ob inner join salesforce.Store__c  store on " \
+		sql_target2 = "select store.Zip__c as Zip, store.locationrequiremen__c, ob.observationtime__c as Datetime, cam.campaignid__c as Campaign_id, weather.weather__c as Weather from salesforce.ObservationH__c ob inner join salesforce.Store__c  store on " \
 		"ob.StoreSFID__c = store.sfid " \
 		"  left join salesforce.WeatherInfo__c weather on store.Zip__c = weather.Zip__c " \
 		"  inner join  salesforce.CampaignMaster__c cam on true = true " \
@@ -106,6 +106,8 @@ def hello_world():
 		df = psql.read_sql(sql_target2, conn, params=key_target2)
 		
 		print(df.loc[0])
+		
+		predict(df)
 		
 		# 暫定処理
 		insert_campaign(conn, cur)
@@ -282,10 +284,13 @@ def predict(df):
 	df['Day'] = df['Datetime'].dt.strftime('%d')
 
 	df['Time'] = df['Datetime'].dt.strftime('%H')
+	
+	print("datafrme first row:")
+	print(df.loc[0])
 
-#	le_dow = LabelEncoder().fit(["日", "月", "火", "水", "木", "金", "土"])
-#	le_seg = LabelEncoder().fit(["ビジネス", "住宅", "学校", "観光"])
-	le_weather = LabelEncoder().fit(["晴れ", "曇り", "雨"])
+	le_dow = LabelEncoder().fit(["日", "月", "火", "水", "木", "金", "土"])
+	le_seg = LabelEncoder().fit(["駅周辺", "住宅", "学校", "観光"])
+	le_weather = LabelEncoder().fit(["晴れ", "曇り", "雨", "雪", "暴風"])
 
 #	df['DayOfTheWeek'] = le_dow.transform(df['DayOfTheWeek'])
 #	df['Segment'] = le_seg.transform(df['Segment'])
