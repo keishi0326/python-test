@@ -62,8 +62,10 @@ def hello_world():
 #		key = ("OH0000001", "2018-05-12 21:26:34", "0.75", "a037F00000RqujbQAB")
 #		cur.execute(sql, key)
 
+		empty = int(float(empty))
+
 		sql = """ INSERT INTO salesforce.ObservationH__c(ObservationID__c, ObservationTime__c, Availability__c, StoreSFID__c) VALUES (%s, %s, %s, %s)"""
-		key = (newID, now, empty, storeID)
+		key = (newID, now, str(empty), storeID)
 		cur.execute(sql, key)
 		conn.commit()
 
@@ -76,7 +78,7 @@ def hello_world():
 		row = cur.fetchone()
 		judge_value = row[0]
 		
-		if int(empty) < judge_value:
+		if empty < judge_value:
 			return "The observed situation is crowded!"
 	
 		print("Recommendation process starts!!")
