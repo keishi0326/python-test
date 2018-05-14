@@ -279,11 +279,11 @@ def hello_world():
 
 # リコメンデーション処理
 def predict(df):
-	df['Month'] = df['Datetime'].dt.strftime('%m')
-	df['Weekday'] = df['Datetime'].dt.strftime('%w')
-	df['Day'] = df['Datetime'].dt.strftime('%d')
+	df['Month'] = df['datetime'].dt.strftime('%m')
+	df['Weekday'] = df['datetime'].dt.strftime('%w')
+	df['Day'] = df['datetime'].dt.strftime('%d')
 
-	df['Time'] = df['Datetime'].dt.strftime('%H')
+	df['Time'] = df['datetime'].dt.strftime('%H')
 	
 	print("datafrme first row:")
 	print(df.loc[0])
@@ -296,7 +296,7 @@ def predict(df):
 #	df['Segment'] = le_seg.transform(df['Segment'])
 #	df['Weather'] = le_weather.transform(df['Weather'])
 
-	data = df.drop(["Datetime"], axis=1)
+	data = df.drop(["datetime"], axis=1)
 
 #  キャンペーン候補追加
 def insert_campaign(conn, cur):
