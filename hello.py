@@ -124,7 +124,8 @@ def hello_world():
 
 		sql_target2 = "select to_char(ob.observationtime__c, 'YYYYMMDDHH24') as ymdh, store.Zip__c as Zip, store.locationrequiremen__c, ob.observationtime__c as Datetime, cam.campaignid__c as Campaign_id, weather.weather__c as Weather from salesforce.ObservationH__c ob inner join salesforce.Store__c  store on " \
 		"ob.StoreSFID__c = store.sfid " \
-		"  left join salesforce.WeatherInfo__c weather on store.Zip__c = weather.Zip__c " \
+		"  left join salesforce.WeatherInfo__c weather on store.Zip__c = weather.Zip__c and " \
+		"  to_char(ob.observationtime__c, 'YYYYMMDDHH24') = to_char(weather.observationtime__c, 'YYYYMMDDHH24') " \
 		"  inner join  salesforce.CampaignMaster__c cam on true = true " \
 		" where ob.ObservationID__c = %s"
 		key_target2 = (newID, )
