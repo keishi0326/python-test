@@ -84,19 +84,31 @@ def hello_world():
 	
 		print("Recommendation process starts!!")
 
-		# 前提処理　現在の天候データレコードを追加
-		# キー値の取得
-		sql_store = "select WeatherPrimaryKey__c from salesforce.WeatherInfo__c order by WeatherPrimaryKey__c desc"""
-		cur.execute(sql_store)
+		# 暫定処理　現在の天候データレコードを追加
+		# 追加レコードが必要かどうか確認
+		sql_weather = "select WeatherPrimaryKey__c from salesforce.WeatherInfo__c where Zip__c = %s and to_char(ObservationTime__c, 'YYYYMMDDHH24') = %s"""
+		where_clause = (zip, now.strftime('%Y%m%d%H'))
+		cur.execute(sql_weather)
 		row = cur.fetchone()
-		primary_key = "00000001" if row is None else "{08}".format(int(row[0]) +1) 
 		
-		# 天候情報の取得
-		sql = """ INSERT INTO salesforce.WeatherInfo__c(Zip__c, Temparature__c, ObservationTime__c, Weather__c, WeatherPrimaryKey__c) VALUES (%s, %s, %s, %s, %s)"""
-		key = (zip, 20, now, "晴れ", primary_key)
-		cur.execute(sql, key)
-		conn.commit()		
+		# もし、既に天候レコードが存在していた場合には、天候レコード追加処理をスキップ
+		if row is not None:
+			print("Current weather record does not exist! Record weather create process starts!") 
+			# キー値の取得
+			sql_weather = "select WeatherPrimaryKey__c from salesforce.WeatherInfo__c order by WeatherPrimaryKey__c desc"""
+			cur.execute(sql_weather)
+			row = cur.fetchone()
+			primary_key = "00000001" if row is None else "{08}".format(int(row[0]) +1) 
 		
+			# 天候情報の追加
+			sql = """ INSERT INTO salesforce.WeatherInfo__c(Zip__c, Temparature__c, ObservationTime__c, Weather__c, WeatherPrimaryKey__c) VALUES (%s, %s, %s, %s, %s)"""
+			# 最終実装は、天気APIから天気情報を取得してセット
+			key = (zip, 20, now, "晴れ", primary_key)
+			cur.execute(sql, key)
+			conn.commit()		
+		else:
+			print("Current weather record does not exist! Record weather create process starts!") 
+
 		sql_target = "select * from salesforce.ObservationH__c ob inner join salesforce.Store__c  store on " \
 		"ob.StoreSFID__c = store.sfid " \
 		"  left join salesforce.WeatherInfo__c weather on store.Zip__c = weather.Zip__c " \
