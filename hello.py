@@ -88,7 +88,7 @@ def hello_world():
 		# 追加レコードが必要かどうか確認
 		sql_weather = "select WeatherPrimaryKey__c from salesforce.WeatherInfo__c where Zip__c = %s and to_char(ObservationTime__c, 'YYYYMMDDHH24') = %s"""
 		where_clause = (zip, now.strftime('%Y%m%d%H'))
-		cur.execute(sql_weather)
+		cur.execute(sql_weather, where_clause)
 		row = cur.fetchone()
 		
 		# もし、既に天候レコードが存在していた場合には、天候レコード追加処理をスキップ
