@@ -110,7 +110,7 @@ def hello_world():
 		else:
 			print("Current weather record exists! Create Process skips.") 
 
-		sql_target2 = "select to_char(ob.observationtime__c, 'YYYYMMDDHH24') as ymdh, store.Zip__c as Zip, store.locationrequiremen__c, ob.observationtime__c as Datetime, cam.campaignid__c as Campaign_id, weather.weather__c as Weather from salesforce.ObservationH__c ob inner join salesforce.Store__c  store on " \
+		sql_target2 = "select weather.weather__c as weather, store.locationrequiremen__c as segment, cam.campaignid__c as campaign_id, ob.observationtime__c as datetime from salesforce.ObservationH__c ob inner join salesforce.Store__c  store on " \
 		"ob.StoreSFID__c = store.sfid " \
 		"  left join salesforce.WeatherInfo__c weather on store.Zip__c = weather.Zip__c and " \
 		"  to_char(ob.observationtime__c, 'YYYYMMDDHH24') = to_char(weather.observationtime__c, 'YYYYMMDDHH24') " \
@@ -296,22 +296,21 @@ def hello_world():
 
 # リコメンデーション処理
 def predict(df):
-	df['Month'] = df['datetime'].dt.strftime('%m')
-	df['Weekday'] = df['datetime'].dt.strftime('%w')
-	df['Day'] = df['datetime'].dt.strftime('%d')
+	df['year'] = df['datetime'].dt.strftime('%Y')
+	df['month'] = df['datetime'].dt.strftime('%m')
+	df['weekday'] = df['datetime'].dt.strftime('%w')
+	df['day'] = df['datetime'].dt.strftime('%d')
 
-	df['Time'] = df['datetime'].dt.strftime('%H')
+	df['time'] = df['datetime'].dt.strftime('%H')
 	
 	print("datafrme first row:")
 	print(df.loc[0])
 
-	le_dow = LabelEncoder().fit(["日", "月", "火", "水", "木", "金", "土"])
-	le_seg = LabelEncoder().fit(["駅周辺", "住宅", "学校", "観光"])
+	le_seg = LabelEncoder().fit(["ビジネス", "住宅", "学校", "観光","駅周辺"])
 	le_weather = LabelEncoder().fit(["晴れ", "曇り", "雨", "雪", "暴風"])
 
-#	df['DayOfTheWeek'] = le_dow.transform(df['DayOfTheWeek'])
-#	df['Segment'] = le_seg.transform(df['Segment'])
-#	df['Weather'] = le_weather.transform(df['Weather'])
+	df['segment'] = le_seg.transform(df['segment'])
+	df['weather'] = le_weather.transform(df['weather'])
 
 	data = df.drop(["datetime"], axis=1)
 
