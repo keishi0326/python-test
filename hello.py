@@ -98,7 +98,7 @@ def hello_world():
 			sql_weather = "select WeatherPrimaryKey__c from salesforce.WeatherInfo__c order by WeatherPrimaryKey__c desc"""
 			cur.execute(sql_weather)
 			row = cur.fetchone()
-			primary_key = "00000001" if row is None else "{08}".format(int(row[0]) +1) 
+			primary_key = "00000001" if row is None else "{:08}".format(int(row[0]) +1) 
 			print("weather new_key: " + primary_key) 
 			
 			# 天候情報の追加
