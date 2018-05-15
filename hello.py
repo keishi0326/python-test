@@ -110,18 +110,6 @@ def hello_world():
 		else:
 			print("Current weather record exists! Create Process skips.") 
 
-		sql_target = "select * from salesforce.ObservationH__c ob inner join salesforce.Store__c  store on " \
-		"ob.StoreSFID__c = store.sfid " \
-		"  left join salesforce.WeatherInfo__c weather on store.Zip__c = weather.Zip__c " \
-		"  inner join  salesforce.CampaignMaster__c on true = true " \
-		" where ob.ObservationID__c = %s"
-		
-		key_target = (newID, )
-		cur.execute(sql_target, key_target)
-		
-		for row in cur:
-			print(row)
-
 		sql_target2 = "select to_char(ob.observationtime__c, 'YYYYMMDDHH24') as ymdh, store.Zip__c as Zip, store.locationrequiremen__c, ob.observationtime__c as Datetime, cam.campaignid__c as Campaign_id, weather.weather__c as Weather from salesforce.ObservationH__c ob inner join salesforce.Store__c  store on " \
 		"ob.StoreSFID__c = store.sfid " \
 		"  left join salesforce.WeatherInfo__c weather on store.Zip__c = weather.Zip__c and " \
@@ -133,7 +121,8 @@ def hello_world():
 #		df = psql.read_sql(sql_target2, conn, params=key_target2, parse_dates = [1])
 		df = psql.read_sql(sql_target2, conn, params=key_target2)
 		
-		print(df.loc[0])
+#		print(df.loc[0])
+		print(df)
 		
 		predict(df)
 		
