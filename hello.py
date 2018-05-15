@@ -89,7 +89,7 @@ def hello_world():
 		sql_store = "select WeatherPrimaryKey__c from salesforce.WeatherInfo__c order by WeatherPrimaryKey__c desc"""
 		cur.execute(sql_store)
 		row = cur.fetchone()
-		primary_key = "{08}".format(int(row[0]) +1) if row is None else "00000001"
+		primary_key = "00000001" if row is None else "{08}".format(int(row[0]) +1) 
 		
 		# 天候情報の取得
 		sql = """ INSERT INTO salesforce.WeatherInfo__c(Zip__c, Temparature__c, ObservationTime__c, Weather__c, WeatherPrimaryKey__c) VALUES (%s, %s, %s, %s, %s)"""
