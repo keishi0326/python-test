@@ -99,7 +99,8 @@ def hello_world():
 			cur.execute(sql_weather)
 			row = cur.fetchone()
 			primary_key = "00000001" if row is None else "{08}".format(int(row[0]) +1) 
-		
+			print("weather new_key: " + primary_key) 
+			
 			# 天候情報の追加
 			sql = """ INSERT INTO salesforce.WeatherInfo__c(Zip__c, Temparature__c, ObservationTime__c, Weather__c, WeatherPrimaryKey__c) VALUES (%s, %s, %s, %s, %s)"""
 			# 最終実装は、天気APIから天気情報を取得してセット
