@@ -68,20 +68,34 @@ def hello_world():
 		key = (newID, now, str(empty), storeID)
 		cur.execute(sql, key)
 		conn.commit()
-
+		
 #店舗マスタ登録値を取得してパラメタ(empty)がその値を超えていれば
 #処理を継続。超えていなければ処理終了
-		sql_store = "select congestionjudgevalue__c from salesforce.Store__c where sfid = %s"""
+		sql_store = "select congestionjudgevalue__c, zip__c from salesforce.Store__c where sfid = %s"""
 		key_store = (storeID,)
 		cur.execute(sql_store, key_store)
 
 		row = cur.fetchone()
 		judge_value = row[0]
+		zip = row[1]
 		
 		if empty < judge_value:
 			return "The observed situation is crowded!"
 	
 		print("Recommendation process starts!!")
+
+		# 前提処理　現在の天候データレコードを追加
+		# キー値の取得
+		sql_store = "select WeatherPrimaryKey__c from salesforce.WeatherInfo__c order by WeatherPrimaryKey__c desc"""
+		cur.execute(sql_store)
+		row = cur.fetchone()
+		primary_key = "{08}".format(int(row[0]) +1) if row is None else "00000001"
+		
+		# 天候情報の取得
+		sql = """ INSERT INTO salesforce.WeatherInfo__c(Zip__c, Temparature__c, ObservationTime__c, Weather__c, WeatherPrimaryKey__c) VALUES (%s, %s, %s, %s, %s)"""
+		key = (zip, 20, now, "晴れ", primary_key)
+		cur.execute(sql, key)
+		conn.commit()		
 		
 		sql_target = "select * from salesforce.ObservationH__c ob inner join salesforce.Store__c  store on " \
 		"ob.StoreSFID__c = store.sfid " \
