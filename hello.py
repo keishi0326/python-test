@@ -107,7 +107,7 @@ def hello_world():
 			cur.execute(sql, key)
 			conn.commit()		
 		else:
-			print("Current weather record does not exist! Record weather create process starts!") 
+			print("Current weather record exists! Create Process skips.") 
 
 		sql_target = "select * from salesforce.ObservationH__c ob inner join salesforce.Store__c  store on " \
 		"ob.StoreSFID__c = store.sfid " \
