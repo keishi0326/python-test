@@ -86,13 +86,13 @@ def hello_world():
 
 		# 暫定処理　現在の天候データレコードを追加
 		# 追加レコードが必要かどうか確認
-		sql_weather = "select WeatherPrimaryKey__c from salesforce.WeatherInfo__c where Zip__c = %s and to_char(ObservationTime__c, 'YYYYMMDDHH24') = %s"""
+		sql_weather = "select WeatherPrimaryKey__c, Zip__c, to_char(ObservationTime__c, 'YYYYMMDDHH24') from salesforce.WeatherInfo__c where Zip__c = %s and to_char(ObservationTime__c, 'YYYYMMDDHH24') = %s"""
 		where_clause = (zip, now.strftime('%Y%m%d%H'))
 		cur.execute(sql_weather, where_clause)
 		row = cur.fetchone()
 		
 		# もし、既に天候レコードが存在していた場合には、天候レコード追加処理をスキップ
-		if row is not None:
+		if row is None:
 			print("Current weather record does not exist! Record weather create process starts!") 
 			# キー値の取得
 			sql_weather = "select WeatherPrimaryKey__c from salesforce.WeatherInfo__c order by WeatherPrimaryKey__c desc"""
