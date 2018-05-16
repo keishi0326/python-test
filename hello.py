@@ -317,7 +317,7 @@ def predict(df):
 	print(data)
 
 	# 学習した分類器を読み込む。
-	classifier = joblib.load('data/model.pkl')
+	classifier = joblib.load('data/model2.pkl')
 
 	# パラメータを表示してみる。
 	print (classifier)
@@ -329,7 +329,38 @@ def predict(df):
 	df_result = pd.DataFrame()
 	df_result[1]=result
 	
+@route("/createmodel")
+def hello_world():
+	df = pd.read_csv('data/promotion.csv',sep=',',encoding='SHIFT-JIS', parse_dates = [2,3])
+
+	df = transform(df)
 	
+	print(df)
+
+	data = df.drop(["Time", "performance", "date"], axis=1)
+
+	#target = df['y']
+	target = df['performance']
+
+	data_train_s, data_test_s, label_train_s, label_test_s = cross_validation.train_test_split(data, target, test_size=0.01)
+	parameters = {
+              'n_estimators' : [100, 500],                 
+              'learning_rate' : [0.1], 
+              'max_depth': [4],
+              'min_samples_leaf': [9],
+              'max_features': [1.0, 0.3]
+              }
+
+	clf_cv = grid_search.GridSearchCV(GradientBoostingRegressor(), parameters, cv = 4, scoring='neg_mean_absolute_error')
+
+	clf_cv.fit(data_train_s, label_train_s)
+
+	print("Best Model Parameter: ", clf_cv.best_params_)
+	print("Best Model Score: ", clf_cv.best_score_)
+
+	# 学習した分類器を保存する。
+	joblib.dump(clf_cv, 'data/model_v2.pkl', compress=True)
+		
 	
 #  キャンペーン候補追加
 def insert_campaign(conn, cur):
@@ -372,4 +403,22 @@ def db_connect():
 		print("DB connect successfull!")
 		return conn, cur
 	
+def transform(df):
+    df['year'] = df['date'].dt.strftime('%Y')
+    df['month'] = df['date'].dt.strftime('%m')
+    df['weekday'] = df['date'].dt.strftime('%w')
+    df['day'] = df['date'].dt.strftime('%d')
+
+    df['time'] = df['Time'].dt.strftime('%H')
+
+    le_seg = LabelEncoder().fit(["ビジネス", "住宅", "学校", "観光", "駅周辺"])
+    le_weather = LabelEncoder().fit(["晴れ", "曇り", "雨", "雪", "暴風"])
+
+    df['segment'] = le_seg.transform(df['segment'])
+    df['weather'] = le_weather.transform(df['weather'])    
+
+    return df
+	
 run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+
+
