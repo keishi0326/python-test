@@ -30,12 +30,15 @@ def do_json(s):
     data = json.loads(s)
     print(json.dumps(data, sort_keys=True, indent=4))
     print( data["weather"][0]["id"])
+    print( str(data["weather"][0]["id"])[0])
+
 
     hash = { "2": "暴風", "3": "霧雨", "5":"雨", "6":"雪", "7":"Atmosphere", "8":"晴れ", "9":"曇り"}
 
     #weather code の１桁目を取得
     weather_code = str(data["weather"][0]["id"])[0]
-
+    print( "weather code : " + weather_code )
+	
     return hash[weather_code]
 	
 	
