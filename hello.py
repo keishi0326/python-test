@@ -124,7 +124,7 @@ def hello_world():
 #		print(df.loc[0])
 #		print(df)
 		
-		predict(df)
+		result = predict(df)
 		
 		# 暫定処理
 		insert_campaign(conn, cur)
@@ -333,10 +333,11 @@ def predict(df):
 
 	print(df_result)
 	
-	df_result.sort_values(by=["result"], ascending=False)
+	df_result = df_result.sort_values(by=["result"], ascending=False)
 
 	print(df_result)
 
+	return df_result
 	
 @route("/createmodel")
 def hello_world():
