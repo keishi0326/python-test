@@ -317,7 +317,7 @@ def predict(df):
 	print(data)
 
 	# 学習した分類器を読み込む。
-	classifier = joblib.load('data/model2.pkl')
+	classifier = joblib.load('data/model_v2.pkl')
 
 	# パラメータを表示してみる。
 	print (classifier)
