@@ -110,7 +110,7 @@ def hello_world():
 		else:
 			print("Current weather record exists! Create Process skips.") 
 
-		sql_target2 = "select weather.weather__c as weather, store.locationrequiremen__c as segment, cam.campaignid__c as campaign_id, ob.observationtime__c as datetime from salesforce.ObservationH__c ob inner join salesforce.Store__c  store on " \
+		sql_target2 = "select weather.weather__c as weather, store.locationrequiremen__c as segment, cam.campaignid__c as campaign_id, cam.sfid as cam_key, cam.contents__c as cam_name, ob.observationtime__c as datetime from salesforce.ObservationH__c ob inner join salesforce.Store__c  store on " \
 		"ob.StoreSFID__c = store.sfid " \
 		"  left join salesforce.WeatherInfo__c weather on store.Zip__c = weather.Zip__c and " \
 		"  to_char(ob.observationtime__c, 'YYYYMMDDHH24') = to_char(weather.observationtime__c, 'YYYYMMDDHH24') " \
@@ -120,14 +120,15 @@ def hello_world():
 
 #		df = psql.read_sql(sql_target2, conn, params=key_target2, parse_dates = [1])
 		df = psql.read_sql(sql_target2, conn, params=key_target2)
-		
+
+		campagin_df = df[['campaign_id', 'cam_key', 'cam_name']]
 #		print(df.loc[0])
 #		print(df)
 		
 		result = predict(df)
 		
 		# 暫定処理
-		insert_campaign(conn, cur)
+		insert_campaign(conn, cur, result)
 		
 	except (Exception, psycopg2.DatabaseError) as error:
 		print("Exception occured!!")
@@ -312,7 +313,7 @@ def predict(df):
 	df['segment'] = le_seg.transform(df['segment'])
 	df['weather'] = le_weather.transform(df['weather'])
 
-	data = df.drop(["datetime"], axis=1)
+	data = df.drop(["datetime", 'cam_key', 'cam_name'], axis=1)
 
 	print(data)
 
@@ -373,7 +374,7 @@ def hello_world():
 		
 	
 #  キャンペーン候補追加
-def insert_campaign(conn, cur):
+def insert_campaign(conn, cur, df):
 	cur.execute("SELECT campaigncandidateid__c FROM salesforce.CampaignCandidate__c order by campaigncandidateid__c desc")
 
 	for row in cur:
