@@ -122,7 +122,7 @@ def hello_world():
 		df = psql.read_sql(sql_target2, conn, params=key_target2)
 		
 #		print(df.loc[0])
-		print(df)
+#		print(df)
 		
 		predict(df)
 		
@@ -314,6 +314,23 @@ def predict(df):
 
 	data = df.drop(["datetime"], axis=1)
 
+	print(data)
+
+	# 学習した分類器を読み込む。
+	classifier = joblib.load('data/model.pkl')
+
+	# パラメータを表示してみる。
+	print (classifier)
+
+	result = classifier.predict(data)
+
+	#df_date['result'] = result
+
+	df_result = pd.DataFrame()
+	df_result[1]=result
+	
+	
+	
 #  キャンペーン候補追加
 def insert_campaign(conn, cur):
 	cur.execute("SELECT campaigncandidateid__c FROM salesforce.CampaignCandidate__c order by campaigncandidateid__c desc")
