@@ -12,6 +12,8 @@ import psycopg2 #DB Connect
 from sklearn.externals import joblib
 from sklearn.preprocessing import LabelEncoder
 
+import common #original utility 
+
 @route("/")
 def hello_world():
         return "Hello World!"
@@ -91,6 +93,9 @@ def hello_world():
 		cur.execute(sql_weather, where_clause)
 		row = cur.fetchone()
 		
+		weather_code = common.get_weather(zip)
+		print("weather_code : " + weather_code)
+
 		# もし、既に天候レコードが存在していた場合には、天候レコード追加処理をスキップ
 		if row is None:
 			print("Current weather record does not exist! Record weather create process starts!") 
@@ -103,7 +108,7 @@ def hello_world():
 			
 			# 天候情報の追加
 			sql = """ INSERT INTO salesforce.WeatherInfo__c(Zip__c, Temparature__c, ObservationTime__c, Weather__c, WeatherPrimaryKey__c) VALUES (%s, %s, %s, %s, %s)"""
-			# 最終実装は、天気APIから天気情報を取得してセット
+			# 最終実装は、天気APIから天気情報を取得してセット			
 			key = (zip, 20, now, "晴れ", primary_key)
 			cur.execute(sql, key)
 			conn.commit()		
@@ -343,7 +348,7 @@ def predict(df):
 def hello_world():
 	df = pd.read_csv('data/promotion.csv',sep=',',encoding='SHIFT-JIS', parse_dates = [2,3])
 
-	df = transform(df)
+	df = common.transform(df)
 	
 	print(df)
 
@@ -425,22 +430,7 @@ def db_connect():
 		print("DB connect successfull!")
 		return conn, cur
 	
-def transform(df):
-    df['year'] = df['date'].dt.strftime('%Y')
-    df['month'] = df['date'].dt.strftime('%m')
-    df['weekday'] = df['date'].dt.strftime('%w')
-    df['day'] = df['date'].dt.strftime('%d')
 
-    df['time'] = df['Time'].dt.strftime('%H')
-
-    le_seg = LabelEncoder().fit(["ビジネス", "住宅", "学校", "観光", "駅周辺"])
-    le_weather = LabelEncoder().fit(["晴れ", "曇り", "雨", "雪", "暴風"])
-
-    df['segment'] = le_seg.transform(df['segment'])
-    df['weather'] = le_weather.transform(df['weather'])    
-
-    return df
-	
 run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
 
 
