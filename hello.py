@@ -127,7 +127,7 @@ def hello_world():
 		result = predict(df)
 		
 		#キャンペーン候補レコード追加
-		insert_campaign(conn, cur, campaign_df, result)
+		insert_campaign(conn, cur, storeID, campaign_df, result)
 		
 	except (Exception, psycopg2.DatabaseError) as error:
 		print("Exception occured!!")
@@ -373,7 +373,7 @@ def hello_world():
 		
 	
 #  キャンペーン候補追加
-def insert_campaign(conn, cur, campaign_df, result):
+def insert_campaign(conn, cur, storeID, campaign_df, result):
 	cur.execute("SELECT campaigncandidateid__c FROM salesforce.CampaignCandidate__c order by campaigncandidateid__c desc")
 
 	for row in cur:
@@ -389,24 +389,20 @@ def insert_campaign(conn, cur, campaign_df, result):
 	newID = "CK-00000001" if newID is None else newID
 
 	sql = """ INSERT INTO salesforce.CampaignCandidate__c(CampaignCandidateID__c, cm1_sfid__c, cm2_sfid__c, cm3_sfid__c, cm4_sfid__c, cm5_sfid__c, storesfid__c) VALUES (%s, %s, %s, %s, %s, %s, %s)"""
-
-	id = result['campaign_id'][0]
-	cam_key0 = campaign_df[campaign_df['campaign_id'] == id]['cam_key'].iat[0]
-	id = result['campaign_id'][1]
-	cam_key1 = campaign_df[campaign_df['campaign_id'] == id]['cam_key'].iat[0]
-	id = result['campaign_id'][2]
-	cam_key2 = campaign_df[campaign_df['campaign_id'] == id]['cam_key'].iat[0]
-	id = result['campaign_id'][3]
-	cam_key3 = campaign_df[campaign_df['campaign_id'] == id]['cam_key'].iat[0]
-	id = result['campaign_id'][4]
-	cam_key4 = campaign_df[campaign_df['campaign_id'] == id]['cam_key'].iat[0]
+ 
+	cam_key0 = campaign_df[campaign_df['campaign_id'] == result['campaign_id'][0]]['cam_key'].iat[0]
+	cam_key1 = campaign_df[campaign_df['campaign_id'] == result['campaign_id'][1]]['cam_key'].iat[0]
+	cam_key2 = campaign_df[campaign_df['campaign_id'] == result['campaign_id'][2]]['cam_key'].iat[0]
+	cam_key3 = campaign_df[campaign_df['campaign_id'] == result['campaign_id'][3]]['cam_key'].iat[0]
+	cam_key4 = campaign_df[campaign_df['campaign_id'] == result['campaign_id'][4]]['cam_key'].iat[0]
 	print(cam_key0)
 	print(cam_key1)
 	print(cam_key2)
 	print(cam_key3)
 	print(cam_key4)
 	
-	key = (newID, "a027F00000JWCIwQAP", "a027F00000JWCJQQA5", "a027F00000JWCJVQA5", "a027F00000JWCJaQAP", "a027F00000JWCJfQAP", "a037F00000RqujbQAB")
+#	key = (newID, "a027F00000JWCIwQAP", "a027F00000JWCJQQA5", "a027F00000JWCJVQA5", "a027F00000JWCJaQAP", "a027F00000JWCJfQAP", "a037F00000RqujbQAB")
+	key = (newID, cam_key0, cam_key1, cam_key2, cam_key3, cam_key4, storeID)
 
 	cur.execute(sql, key)
 	conn.commit()
