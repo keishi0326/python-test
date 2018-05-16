@@ -8,7 +8,11 @@ import sys
 import urllib
 import json
 
-def web_service_call():
+def get_weather(zip):
+    json_str = web_service_call(zip)
+    do_json(json_str)
+	
+def web_service_call(zip):
 	#https://openweathermap.org/weather-conditions
     url = 'http://api.openweathermap.org/data/2.5/weather?'
     appid = '34ab458c5035d9fe6201672346b56002'
@@ -29,19 +33,17 @@ def do_json(s):
     item_list = data["ResultSet"]["0"]["Result"]
 
     #空のディクショナリを作る
-    ranking = {}
-    for  k, v in item_list.iteritems():
-        try:
-            rank = int(v["_attributes"]["rank"])
-            vector = v["_attributes"]["vector"]
-            name  = v["Name"]
-            ranking[rank] = [vector, name]
-        except:
-            if k == "RankingInfo":
-                StartDate = v["StartDate"]
-                EndDate = v["EndDate"]
-    
-
+#    ranking = {}
+#    for  k, v in item_list.iteritems():
+#        try:
+#            rank = int(v["_attributes"]["rank"])
+#            vector = v["_attributes"]["vector"]
+#            name  = v["Name"]
+#            ranking[rank] = [vector, name]
+#        except:
+#            if k == "RankingInfo":
+#                StartDate = v["StartDate"]
+#                EndDate = v["EndDate"]  
 
 if __name__ == '__main__':
     json_str = web_service_call()
