@@ -118,17 +118,16 @@ def hello_world():
 		" where ob.ObservationID__c = %s"
 		key_target2 = (newID, )
 
-#		df = psql.read_sql(sql_target2, conn, params=key_target2, parse_dates = [1])
 		df = psql.read_sql(sql_target2, conn, params=key_target2)
 
-		campagin_df = df[['campaign_id', 'cam_key', 'cam_name']]
-#		print(df.loc[0])
+		campaign_df = df[['campaign_id', 'cam_key', 'cam_name']]
 #		print(df)
 		
+		#予測処理
 		result = predict(df)
 		
-		# 暫定処理
-		insert_campaign(conn, cur, result)
+		#キャンペーン候補レコード追加
+		insert_campaign(conn, cur, campaign_df, result)
 		
 	except (Exception, psycopg2.DatabaseError) as error:
 		print("Exception occured!!")
@@ -374,7 +373,7 @@ def hello_world():
 		
 	
 #  キャンペーン候補追加
-def insert_campaign(conn, cur, df):
+def insert_campaign(conn, cur, campaign_df, result):
 	cur.execute("SELECT campaigncandidateid__c FROM salesforce.CampaignCandidate__c order by campaigncandidateid__c desc")
 
 	for row in cur:
@@ -391,6 +390,22 @@ def insert_campaign(conn, cur, df):
 
 	sql = """ INSERT INTO salesforce.CampaignCandidate__c(CampaignCandidateID__c, cm1_sfid__c, cm2_sfid__c, cm3_sfid__c, cm4_sfid__c, cm5_sfid__c, storesfid__c) VALUES (%s, %s, %s, %s, %s, %s, %s)"""
 
+	id = result['campaign_id'][0]
+	cam_key0 = campaign_df[campaign_df['campaign_id'] == id]['cam_key'].iat[0]
+	id = result['campaign_id'][1]
+	cam_key1 = campaign_df[campaign_df['campaign_id'] == id]['cam_key'].iat[0]
+	id = result['campaign_id'][2]
+	cam_key2 = campaign_df[campaign_df['campaign_id'] == id]['cam_key'].iat[0]
+	id = result['campaign_id'][3]
+	cam_key3 = campaign_df[campaign_df['campaign_id'] == id]['cam_key'].iat[0]
+	id = result['campaign_id'][4]
+	cam_key4 = campaign_df[campaign_df['campaign_id'] == id]['cam_key'].iat[0]
+	print(cam_key0)
+	print(cam_key1)
+	print(cam_key2)
+	print(cam_key3)
+	print(cam_key4)
+	
 	key = (newID, "a027F00000JWCIwQAP", "a027F00000JWCJQQA5", "a027F00000JWCJVQA5", "a027F00000JWCJaQAP", "a027F00000JWCJfQAP", "a037F00000RqujbQAB")
 
 	cur.execute(sql, key)
