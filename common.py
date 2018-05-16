@@ -8,6 +8,9 @@ import sys
 import urllib
 import json
 
+import pandas as pd
+from sklearn.preprocessing import LabelEncoder
+
 def get_weather(zip):
     json_str = web_service_call(zip)
     do_json(json_str)
