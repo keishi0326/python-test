@@ -325,9 +325,18 @@ def predict(df):
 	result = classifier.predict(data)
 
 	#df_date['result'] = result
+	#df_result = pd.DataFrame()
+	#df_result[1]=result
 
-	df_result = pd.DataFrame()
-	df_result[1]=result
+	df_result = data
+	df_result["result"] = result
+
+	print(df_result)
+	
+	df_result.sort_values(by=["result"], ascending=False)
+
+	print(df_result)
+
 	
 @route("/createmodel")
 def hello_world():
