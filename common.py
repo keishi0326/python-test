@@ -30,7 +30,9 @@ def do_json(s):
     sys.exit()
     
     #jsonの階層の"Result"以下を辞書にする。keyは番号：その次の配列がvalueになっている
-    item_list = data["ResultSet"]["0"]["Result"]
+    weather_code = data["ResultSet"]["0"]["Result"]
+
+    return weather_code
 
     #空のディクショナリを作る
 #    ranking = {}
@@ -44,6 +46,22 @@ def do_json(s):
 #            if k == "RankingInfo":
 #                StartDate = v["StartDate"]
 #                EndDate = v["EndDate"]  
+
+def transform(df):
+    df['year'] = df['date'].dt.strftime('%Y')
+    df['month'] = df['date'].dt.strftime('%m')
+    df['weekday'] = df['date'].dt.strftime('%w')
+    df['day'] = df['date'].dt.strftime('%d')
+
+    df['time'] = df['Time'].dt.strftime('%H')
+
+    le_seg = LabelEncoder().fit(["ビジネス", "住宅", "学校", "観光", "駅周辺"])
+    le_weather = LabelEncoder().fit(["晴れ", "曇り", "雨", "雪", "暴風"])
+
+    df['segment'] = le_seg.transform(df['segment'])
+    df['weather'] = le_weather.transform(df['weather'])    
+
+    return df
 
 if __name__ == '__main__':
     json_str = web_service_call()
