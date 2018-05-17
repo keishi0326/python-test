@@ -93,9 +93,6 @@ def hello_world():
 		cur.execute(sql_weather, where_clause)
 		row = cur.fetchone()
 		
-		weather_code = common.get_weather(zip)
-		print("weather_code : " + weather_code)
-
 		# もし、既に天候レコードが存在していた場合には、天候レコード追加処理をスキップ
 		if row is None:
 			print("Current weather record does not exist! Record weather create process starts!") 
@@ -108,8 +105,11 @@ def hello_world():
 			
 			# 天候情報の追加
 			sql = """ INSERT INTO salesforce.WeatherInfo__c(Zip__c, Temparature__c, ObservationTime__c, Weather__c, WeatherPrimaryKey__c) VALUES (%s, %s, %s, %s, %s)"""
-			# 最終実装は、天気APIから天気情報を取得してセット			
-			key = (zip, 20, now, "晴れ", primary_key)
+			
+			# 天気APIから天気情報を取得してセット			
+			weather_name = common.get_weather(zip)
+
+			key = (zip, 20, now, weather_name, primary_key)
 			cur.execute(sql, key)
 			conn.commit()		
 		else:
