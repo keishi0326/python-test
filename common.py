@@ -13,8 +13,9 @@ from sklearn.preprocessing import LabelEncoder
 
 def get_weather(zip):
     json_str = web_service_call(zip)
-    do_json(json_str)
-	
+    weather_name = do_json(json_str)
+    return weather_name
+
 def web_service_call(zip):
 	#https://openweathermap.org/weather-conditions
     url = 'http://api.openweathermap.org/data/2.5/weather?'
@@ -40,7 +41,7 @@ def do_json(s):
     print( type(weather_code))
     print( "weather code : " + weather_code )
     
-    weatehr_name = hash[weather_code]
+    weather_name = hash[weather_code]
     print( "weather name : " + weather_name )
 
     return weather_name
