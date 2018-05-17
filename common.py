@@ -42,7 +42,7 @@ def do_json(s):
     print( type(weather_code))
     print( "weather code : " + weather_code )
     
-    if weather_code == "8" and str(data["weather"][0]["id"]) != "800"
+    if weather_code == "8" and str(data["weather"][0]["id"]) != "800":
         weather_code = "9"
 	
     weather_name = hash[weather_code]
