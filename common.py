@@ -20,9 +20,10 @@ def web_service_call(zip):
 	#https://openweathermap.org/weather-conditions
     url = 'http://api.openweathermap.org/data/2.5/weather?'
     appid = '34ab458c5035d9fe6201672346b56002'
+    zip2 = '%s,jp' % zip
     params = urllib.parse.urlencode(
             {'appid': appid,
-             'zip':'274-0817,jp',})
+             'zip': zip2,})
 
     response = urllib.request.urlopen(url + params)
     return response.read()
@@ -41,6 +42,9 @@ def do_json(s):
     print( type(weather_code))
     print( "weather code : " + weather_code )
     
+    if weather_code == "8" and str(data["weather"][0]["id"]) != "800"
+        weather_code = "9"
+	
     weather_name = hash[weather_code]
     print( "weather name : " + weather_name )
 
