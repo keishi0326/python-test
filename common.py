@@ -37,9 +37,12 @@ def do_json(s):
 
     #weather code の１桁目を取得
     weather_code = str(data["weather"][0]["id"])[0]
-    print( "weather code : " + weather_code )
-	
-    return hash[weather_code]
+    print( "weather code : " + type(weather_code) + " : " + weather_code )
+    
+    weatehr_name = hash[weather_code]
+    print( "weather name : " + weather_name )
+
+    return weather_name
 	
 	
     #jsonの階層の"Result"以下を辞書にする。keyは番号：その次の配列がvalueになっている
