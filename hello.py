@@ -13,10 +13,35 @@ from sklearn.externals import joblib
 from sklearn.preprocessing import LabelEncoder
 
 import common #original utility 
+import boto3
 
 @route("/")
 def hello_world():
         return "Hello World!"
+
+@app.route('/s3')
+def upload_s3():
+	S3_BUCKET = os.environ.get('S3_BUCKET')
+
+#  file_name = request.args.get('file_name')
+	file_name = "data/model.pkl"
+#  file_type = request.args.get('file_type')
+	file_type = "application/zip"
+
+	s3 = boto3.client('s3')
+
+	presigned_post = s3.generate_presigned_post(
+		Bucket = S3_BUCKET,
+		Key = file_name,
+		Fields = {"acl": "public-read", "Content-Type": file_type},
+		Conditions = [
+			{"acl": "public-read"},
+			{"Content-Type": file_type}
+		    ],
+    		ExpiresIn = 3600
+	)
+	
+	return "file upload succeeded!"
 
 @route("/observation-result", method='GET')
 def hello_world():
