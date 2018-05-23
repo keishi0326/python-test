@@ -376,7 +376,7 @@ def hello_world():
 	# 学習した分類器を保存する。
 	joblib.dump(clf_cv, 'data/model_v2.pkl', compress=True)
 	
-	return "Create Model Succeeded!!"
+	return "recommendation model created!!"
 	
 #  キャンペーン候補追加
 def insert_campaign(conn, cur, storeID, campaign_df, result):
