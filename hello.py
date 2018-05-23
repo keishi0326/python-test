@@ -19,7 +19,7 @@ import boto3
 def hello_world():
         return "Hello World!"
 
-@app.route('/s3')
+@route('/s3')
 def upload_s3():
 	S3_BUCKET = os.environ.get('S3_BUCKET')
 
