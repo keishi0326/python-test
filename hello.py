@@ -44,6 +44,20 @@ def upload_s3():
 	
 	return "file upload succeeded!"
 
+@route('/s3_download')
+def download_s3():
+	S3_BUCKET = os.environ.get('S3_BUCKET')
+
+#  file_name = request.args.get('file_name')
+	file_name = "data/model.pkl"
+#  file_type = request.args.get('file_type')
+	file_type = "application/zip"
+	s3 = boto3.resource('s3')
+
+	s3.Bucket(S3_BUCKET).download_file(file_name, 'data/model_v2.pkl')
+	
+	return "file download succeeded!"
+
 @route("/observation-result", method='GET')
 def hello_world():
 	empty = request.query.get('empty')
