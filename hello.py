@@ -228,7 +228,6 @@ def hello_world():
         	if conn is not None:
             		conn.close()
 	return resultMsg
-
 @route("/observationinsert", method="GET")
 def hello_world():
 
